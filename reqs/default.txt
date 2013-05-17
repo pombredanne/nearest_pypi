@@ -1,0 +1,12 @@
+Fabric==1.6.0
+Unipath==0.2.1
+bpython==0.12
+pygeoip==0.2.6
+pypi-mirrors==0.0.5
+python-dateutil==2.1
+python-stdnet==0.7
+pytz==2013b
+redis==2.7.3
+requests==1.2.0
+rq==0.3.7
+Flask==0.9
