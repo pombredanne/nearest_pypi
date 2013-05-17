@@ -12,8 +12,8 @@ class BaseConfig(object):
     STDNET_DB_URL = "redis://localhost:6379?db=0"
     GEOIP_DB_URL_IPV4 = "http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz"
     GEOIP_DB_URL_IPV6 = "http://geolite.maxmind.com/download/geoip/database/GeoLiteCityv6-beta/GeoLiteCityv6.dat.gz"
-    GEOIP_V4_PATH = SITE_ROOT.child("data", "GeoLiteCity.dat")
-    GEOIP_V6_PATH = SITE_ROOT.child("data", "GeoLiteCityv6.dat")
+    GEOIP_PATH_V4 = SITE_ROOT.child("data", "GeoLiteCity.dat")
+    GEOIP_PATH_V6 = SITE_ROOT.child("data", "GeoLiteCityv6.dat")
 
     REDIS = {
         'HOST': "localhost",
