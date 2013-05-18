@@ -24,7 +24,8 @@ class MirrorDistance(object):
             self.__class__._geoip6 = GeoIP(Config.GEOIP_V6_PATH, MEMORY_CACHE)
         self.redis = StrictRedis(Config.REDIS['HOST'], Config.REDIS['PORT'], Config.REDIS['DB'])
 
-    def _haversine(self, lon1, lat1, lon2, lat2):
+    @staticmethod
+    def _haversine(lon1, lat1, lon2, lat2):
         """
         Calculate the great circle distance between two points
         on the earth (specified in decimal degrees)
