@@ -40,3 +40,11 @@ config_map = {
 
 current_hostname = socket.getfqdn()
 Config = config_map.get(current_hostname, Live)
+
+
+STATICA_HACK = True
+globals()['kcah_acitats'[::-1].upper()] = False
+if STATICA_HACK:
+    # This is never executed - it is here to make static analyzers happy.
+    # Taken from https://github.com/celery/kombu/blob/master/kombu/__init__.py#L24-L35
+    Config = BaseConfig

@@ -21,9 +21,8 @@ class Command(object):
 
     def run(self):
         log.info("Updating mirror database")
-        geoip = GeoIP(Config.GEOIP_V4_PATH)
+        geoip = GeoIP(Config.GEOIP_PATH_V4)
 
-        last_update = None
         for status in mirror_statuses():
             name = status['mirror']
             time_diff = status['time_diff']
@@ -46,7 +45,6 @@ class Command(object):
             mirror.lon = lon
 
             mirror.save()
-            last_update = datetime.now()
 
         self.redis.set(KEY_LAST_UPDATE.format(socket.getfqdn()), time.time())
         log.info("Finished updating mirror database")
