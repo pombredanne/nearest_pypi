@@ -66,8 +66,9 @@ class DistanceCalculator(object):
                 (mirror.name, self._haversine(lon, lat, mirror.lon, mirror.lat))
                 for mirror in Mirror.objects.filter(age__lt=3601)
             )
-            self.redis.zadd(key, **distances)
-            self.redis.expire(key, 60 * 60 * 24)  # one day
+            if distances:
+                self.redis.zadd(key, **distances)
+                self.redis.expire(key, 60 * 60 * 24)  # one day
         return distances
 
     def get_nearest_mirror(self, address):
