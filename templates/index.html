@@ -1,0 +1,11 @@
+    <h1>Nearest PyPI</h1>
+    <p>A Geo-IP enabled PyPI proxy.</p>
+    <p>You are currently connecting from this IP address: {{ ip }}</p>
+    {% if no_mirror %}
+        <p>No mirror could be found for your IP address. Your requests will be redirected to the fallback mirror '{{ fallback_mirror }}'.</p>
+    {% else %}
+        <p>
+            Your requests will be redirected to this mirror: {{ mirror }}.
+            It is approx. {{ mirror_distance }} km away from the reported location of your IP address.
+        </p>
+    {% endif %}
