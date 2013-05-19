@@ -1,6 +1,5 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 import logging
-import socket
 from pygeoip import GeoIP
 from pypimirrors.pypimirrors import mirror_statuses
 from redis.client import StrictRedis
@@ -12,8 +11,6 @@ from config import Config
 
 log = getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
-
-KEY_LAST_UPDATE = "nearest_pypi:last_update:{}"
 
 
 class Command(object):
@@ -50,7 +47,7 @@ class Command(object):
 
             mirror.save()
 
-        self.redis.set(KEY_LAST_UPDATE.format(socket.getfqdn()), time.time())
+        self.redis.set(Config.KEY_LAST_UPDATE, time.time())
         log.info("Finished updating mirror database")
 
 

@@ -11,10 +11,6 @@ from logging import getLogger
 log = getLogger(__name__)
 
 
-FALLBACK_MIRROR = "a.pypi.python.org"
-MIRROR_KEY = "mirror:{}"
-
-
 class GeoIPLookupError(Exception):
     pass
 
@@ -42,14 +38,15 @@ class DistanceCalculator(object):
         # haversine formula
         dlon = lon2 - lon1
         dlat = lat2 - lat1
-        a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+        a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
         c = 2 * asin(sqrt(a))
         km = 6367 * c  # convert to km
         return km
 
     def get_mirror_distances(self, address):
-        key = MIRROR_KEY.format(address)
-        distances = OrderedDict(self.redis.zrevrange(key, 0, -1, withscores=True))
+        last_update = self.redis.get(Config.KEY_LAST_UPDATE)
+        key = Config.KEY_MIRROR.format(address, last_update)
+        distances = OrderedDict(self.redis.zrange(key, 0, -1, withscores=True))
         if not distances:
             try:
                 if ":" in address:
@@ -74,7 +71,7 @@ class DistanceCalculator(object):
             )
             if distances:
                 self.redis.zadd(key, **distances)
-                self.redis.expire(key, 60 * 60 * 24)  # one day
+                self.redis.expire(key, 60 * 10)  # 10 min
         return distances
 
     def get_nearest_mirror(self, address):
@@ -82,9 +79,9 @@ class DistanceCalculator(object):
             distances = self.get_mirror_distances(address)
             if distances:
                 return next(distances.iteritems())[0]
-            return FALLBACK_MIRROR
+            return Config.FALLBACK_MIRROR
         except GeoIPLookupError:
-            return FALLBACK_MIRROR
+            return Config.FALLBACK_MIRROR
 
 
 if __name__ == "__main__":

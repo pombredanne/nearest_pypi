@@ -17,12 +17,16 @@ class BaseConfig(object):
     UNOFFICIAL_MIRRORS = [
         "pypi.crate.io",
     ]
+    FALLBACK_MIRROR = "a.pypi.python.org"
 
     REDIS = {
         'HOST': "localhost",
         'PORT': 6379,
         'DB': 0,
     }
+
+    KEY_LAST_UPDATE = "nearest_pypi:last_update"
+    KEY_MIRROR = "nearest_pypi:mirror:{}:{}"
 
 
 class Live(BaseConfig):
