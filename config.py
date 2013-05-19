@@ -14,6 +14,9 @@ class BaseConfig(object):
     GEOIP_DB_URL_IPV6 = "http://geolite.maxmind.com/download/geoip/database/GeoLiteCityv6-beta/GeoLiteCityv6.dat.gz"
     GEOIP_PATH_V4 = SITE_ROOT.child("data", "GeoLiteCity.dat")
     GEOIP_PATH_V6 = SITE_ROOT.child("data", "GeoLiteCityv6.dat")
+    UNOFFICIAL_MIRRORS = [
+        "pypi.crate.io",
+    ]
 
     REDIS = {
         'HOST': "localhost",

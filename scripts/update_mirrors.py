@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import logging
 import socket
 from pygeoip import GeoIP
 from pypimirrors.pypimirrors import mirror_statuses
@@ -10,7 +11,7 @@ from logging import getLogger
 from config import Config
 
 log = getLogger(__name__)
-
+logging.basicConfig(level=logging.DEBUG)
 
 KEY_LAST_UPDATE = "nearest_pypi:last_update:{}"
 
@@ -23,8 +24,11 @@ class Command(object):
         log.info("Updating mirror database")
         geoip = GeoIP(Config.GEOIP_PATH_V4)
 
-        for status in mirror_statuses():
+        for status in mirror_statuses(unofficial_mirrors=Config.UNOFFICIAL_MIRRORS):
             name = status['mirror']
+            if name == "a.pypi.python.org":
+                # don't include 'a' in the list of mirrors - it's no mirror after all
+                continue
             time_diff = status['time_diff']
             if not isinstance(time_diff, timedelta):
                 continue
