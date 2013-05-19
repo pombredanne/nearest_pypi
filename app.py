@@ -22,6 +22,9 @@ def index():
     if app.config['DEBUG'] and request.args.get('_IP'):
         remote_addr = request.args.get('_IP')
 
+    if remote_addr.startswith("::ffff:"):
+        remote_addr = remote_addr.replace("::ffff:", "")
+
     distances = Mirror.get_mirror_distances(remote_addr)
     context = {
         'ip': remote_addr,
