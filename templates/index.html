@@ -2,14 +2,17 @@
 
 {% block content %}
     <h1>Nearest PyPI</h1>
-    <p>A Geo-IP enabled PyPI proxy.</p>
+    <p>
+        A Geo-IP enabled PyPI proxy. It redirects requests made to URLs below <em>/simple</em> to the 
+        geographically nearest PyPI mirror (excluding <em>a.pypi.python.org</em>).
+    </p>
     <p>You are currently connecting from this IP address: {{ ip }}</p>
     {% if no_mirror %}
         <p>No mirror could be found for your IP address. Your requests will be redirected to the fallback mirror '{{ fallback_mirror }}'.</p>
     {% else %}
         <p>
             Your requests will be redirected to this mirror: {{ mirror }}.
-            It is approx. {{ mirror_distance }} km away from the reported location of your IP address.
+            It is approx. {{ "%0.0f" % mirror_distance }} km away from the reported location of your IP address.
         </p>
         <h2>Distances to all mirrors:</h2>
         <table>
@@ -20,7 +23,7 @@
             {% for mirror, distance in distances.items() %}
                 <tr>
                     <td>{{ mirror }}</td>
-                    <td>{{ distance }} km</td>
+                    <td>{{ "%0.0f" % distance }} km</td>
                 </tr>
             {% endfor %}
 
@@ -29,4 +32,16 @@
 
 
     <p>Note: Only mirrors that have been updated in the last hour are considered.</p>
+
+    <h2>How to use it</h2>
+    
+    <p>
+        To use this proxy as your default index in <a href="http://www.pip-installer.org/">PIP</a> add the following
+        to your <em>~/.pip/pip.conf</em>:
+    </p>
+    <blockquote>
+        [global]<br />
+        index-url = http://nearest-pypi.ulo.pe/simple
+    </blockquote>
+
 {% endblock %}
