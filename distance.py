@@ -48,6 +48,8 @@ class DistanceCalculator(object):
         key = Config.KEY_MIRROR.format(address, last_update)
         distances = OrderedDict(self.redis.zrange(key, 0, -1, withscores=True))
         if not distances:
+            if address.startswith("::ffff:"):
+                address = address.replace("::ffff:", "")
             try:
                 if ":" in address:
                     record = self._geoip6.record_by_addr(address)
