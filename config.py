@@ -30,8 +30,11 @@ class BaseConfig(object):
 
 
 class Live(BaseConfig):
-    with open("sentry.dsn", "r") as sentry:
-        SENTRY_DSN = sentry.read()
+    try:
+        with open("sentry.dsn", "r") as sentry:
+            SENTRY_DSN = sentry.read()
+    except IOError:
+        pass
 
 
 class Devel(BaseConfig):
