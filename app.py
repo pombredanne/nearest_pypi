@@ -1,7 +1,10 @@
+from datetime import datetime
 from urlparse import urlunsplit
+import arrow
 from flask.app import Flask
 from flask.globals import request
 from flask.templating import render_template
+from redis.client import StrictRedis
 from werkzeug.utils import redirect
 from models import Mirror
 from logging import getLogger
@@ -16,6 +19,9 @@ if 'SENTRY_DSN' in app.config:
     from raven.contrib.flask import Sentry
     sentry = Sentry(app)
 
+redis = StrictRedis(app.config['REDIS']['HOST'], app.config['REDIS']['PORT'], app.config['REDIS']['DB'])
+
+
 @app.route("/")
 def index():
     remote_addr = request.remote_addr
@@ -28,6 +34,7 @@ def index():
     distances = Mirror.get_mirror_distances(remote_addr)
     context = {
         'ip': remote_addr,
+        'last_update': arrow.get(redis.get(app.config['KEY_LAST_UPDATE']))
     }
     if distances:
         nearest_mirror = next(distances.iteritems())
