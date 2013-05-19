@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from math import radians, cos, sin, asin, sqrt
+from operator import itemgetter
 import socket
 from pygeoip import GeoIP, MEMORY_CACHE
 from redis.client import StrictRedis
@@ -48,7 +49,7 @@ class DistanceCalculator(object):
 
     def get_mirror_distances(self, address):
         key = MIRROR_KEY.format(address)
-        distances = OrderedDict(self.redis.zrange(key, 0, -1, withscores=True, score_cast_func=int))
+        distances = OrderedDict(self.redis.zrevrange(key, 0, -1, withscores=True))
         if not distances:
             try:
                 if ":" in address:
@@ -63,8 +64,13 @@ class DistanceCalculator(object):
             lon = record['longitude']
 
             distances = OrderedDict(
-                (mirror.name, self._haversine(lon, lat, mirror.lon, mirror.lat))
-                for mirror in Mirror.objects.filter(age__lt=3601)
+                sorted(
+                    (
+                        (mirror.name, self._haversine(lon, lat, mirror.lon, mirror.lat))
+                        for mirror in Mirror.objects.filter(age__lt=3601)
+                    ),
+                    key=itemgetter(1)
+                )
             )
             if distances:
                 self.redis.zadd(key, **distances)
