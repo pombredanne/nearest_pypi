@@ -1,1 +1,3 @@
 gunicorn==0.17.2
+raven==3.3.7
+blinker==1.2

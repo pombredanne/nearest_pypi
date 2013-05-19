@@ -12,6 +12,9 @@ log = getLogger(__name__)
 app = Flask(__name__)
 app.config.from_object("config.Config")
 
+if 'SENTRY_DSN' in app.config:
+    from raven.contrib.flask import Sentry
+    sentry = Sentry(app)
 
 @app.route("/")
 def index():

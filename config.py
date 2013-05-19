@@ -30,7 +30,8 @@ class BaseConfig(object):
 
 
 class Live(BaseConfig):
-    pass
+    with open("sentry.dsn", "r") as sentry:
+        SENTRY_DSN = sentry.read()
 
 
 class Devel(BaseConfig):
