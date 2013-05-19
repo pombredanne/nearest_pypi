@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+
+{% block content %}
     <h1>Nearest PyPI</h1>
     <p>A Geo-IP enabled PyPI proxy.</p>
     <p>You are currently connecting from this IP address: {{ ip }}</p>
@@ -8,4 +11,22 @@
             Your requests will be redirected to this mirror: {{ mirror }}.
             It is approx. {{ mirror_distance }} km away from the reported location of your IP address.
         </p>
+        <h2>Distances to all mirrors:</h2>
+        <table>
+            <tr>
+                <td>Mirror</td>
+                <td>Distance</td>
+            </tr>
+            {% for mirror, distance in distances.items() %}
+                <tr>
+                    <td>{{ mirror }}</td>
+                    <td>{{ distance }} km</td>
+                </tr>
+            {% endfor %}
+
+        </table>
     {% endif %}
+
+
+    <p>Note: Only mirrors that have been updated in the last hour are considered.</p>
+{% endblock %}
