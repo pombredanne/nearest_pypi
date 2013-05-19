@@ -14,10 +14,16 @@ PATHS = {
 }
 
 
+@runs_once
+def prepare():
+    local("git push")
+
+
 @task(default=True)
 @roles("live")
 def live(upgrade=False):
     """Deploy to the live server"""
+    prepare()
     deploy(upgrade)
 
 
