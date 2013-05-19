@@ -10,7 +10,7 @@ from logging import getLogger
 from config import Config
 
 log = getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=Config.LOG_LEVEL)
 
 
 class Command(object):
@@ -18,7 +18,7 @@ class Command(object):
         self.redis = StrictRedis(Config.REDIS['HOST'], Config.REDIS['PORT'], Config.REDIS['DB'])
 
     def run(self):
-        log.info("Updating mirror database")
+        log.debug("Updating mirror database")
         geoip = GeoIP(Config.GEOIP_PATH_V4)
 
         for status in mirror_statuses(unofficial_mirrors=Config.UNOFFICIAL_MIRRORS):
@@ -48,7 +48,7 @@ class Command(object):
             mirror.save()
 
         self.redis.set(Config.KEY_LAST_UPDATE, time.time())
-        log.info("Finished updating mirror database")
+        log.debug("Finished updating mirror database")
 
 
 if __name__ == "__main__":

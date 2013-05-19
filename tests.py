@@ -1,3 +1,3 @@
 
-def test_models():
+def test_():
     pass

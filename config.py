@@ -30,6 +30,7 @@ class BaseConfig(object):
 
 
 class Live(BaseConfig):
+    LOG_LEVEL = logging.INFO
     try:
         with open("sentry.dsn", "r") as sentry:
             SENTRY_DSN = sentry.read()
