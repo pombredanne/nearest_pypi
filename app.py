@@ -16,7 +16,11 @@ app.config.from_object("config.Config")
 
 @app.route("/")
 def index():
-    distances = Mirror.get_mirror_distances(request.remote_addr)
+    remote_addr = request.remote_addr
+    if app.config['DEBUG'] and request.args.get('_IP'):
+        remote_addr = request.args.get('_IP')
+
+    distances = Mirror.get_mirror_distances(remote_addr)
     context = {
         'ip': request.remote_addr,
     }
@@ -30,9 +34,14 @@ def index():
     return render_template("index.html", **context)
 
 
+@app.route("/simple/")
 @app.route("/simple/<path:path>")
-def proxy(path):
-    mirror = Mirror.get_nearest_mirror(request.remote_addr)
+def proxy(path=""):
+    remote_addr = request.remote_addr
+    if app.config['DEBUG'] and request.args.get('_IP'):
+        remote_addr = request.args.get('_IP')
+
+    mirror = Mirror.get_nearest_mirror(remote_addr)
     url = urlunsplit((
         "http",
         mirror,
